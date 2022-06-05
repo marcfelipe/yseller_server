@@ -1,0 +1,40 @@
+﻿#ativar o ambiente virtual:
+.venv\Scripts\activate
+
+#ativar o serviço:
+uvicorn main:app --reload --host 0.0.0.0 --port 8088
+
+o retorno pelo fastapi não é necessário converter o dicionário em um objeto json, fica melhor
+retornando diretamente o dicionário.
+
+no flutter/dart consegui tratar com o seguinte código:
+
+
+função de conexão, que trata e devolve como json
+
+Future<List> listar_chamados(String url_, String encodedPath) async{
+  //print("iniciando listar_chamados()");
+  var headers_req =<String, String>{'Content-Type': "application/json"};
+  var uri = Uri.http(url_, encodedPath);
+  var response = await http.get(uri, headers: headers_req);
+  print(response.body.runtimeType);
+  //print(response.body);
+  return json.decode(response.body);
+}
+
+Aqui a função que faz a chamada da função de conexão
+detalhe queé retornado uma lista de dicionários.
+  List chamado_teste2 = [];
+
+  _update() async{
+    //String access_token = await gera_token("yanconorte", "179104");
+    //item_teste = await listaProdutos("yanconorte.varejofacil.com", "/api/v1/produto/produtos", access_token, "100");
+    chamado_teste2 = await listar_chamados("192.168.0.26:8000", "/chamados/abertos");
+    print(chamado_teste2[0]['CODATT']);
+    setState((){
+      //print(chamado_teste);
+      //lista_itens = item_teste['items'];
+      //lista_itens = lista_itens.sort();
+      //print(item_teste);
+    });
+  }
