@@ -35,6 +35,28 @@ pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
 opecod,cfocod,pvdtipfrt,pvddatprev,pvdhorprev,
 pvdtipatd,pvdloccod from pedido_venda where pvdnum = ?"""
 
+update_order = """update pedido_venda set funcod=?,clicod=?,trnseq=?,pvdtipprc=?,
+pvddatemi=?,pvdhoremi=?,pvddatfec=?,pvdhorfec=?,pvdstatus=?,
+pvddocimp=?,pvdobs=?,pvdvlr=?,pvddcn=?,pvdacr=?,pvdblodcn=?,
+pvdbloest=?,pvdblolimcrd=?,pvdclides=?,pvdcliend=?,
+pvdclibai=?,pvdclicid=?,pvdcliest=?,pvdclinum=?,
+pvdclicep=?,pvdclicpfcgc=?,pvdclitel=?,pvdtipefet=?,
+opecod=?,cfocod=?,pvdtipfrt=?,pvddatprev=?,pvdhorprev=?,
+pvdtipatd=?,pvdloccod where pvdnum = ?"""
+
+insert_order = """insert into pedido_venda(pvdnum,funcod,clicod,trnseq,pvdtipprc,
+pvddatemi,pvdhoremi,pvddatfec,pvdhorfec,pvdstatus,
+pvddocimp,pvdobs,pvdvlr,pvddcn,pvdacr,pvdblodcn,
+pvdbloest,pvdblolimcrd,pvdclides,pvdcliend,
+pvdclibai,pvdclicid,pvdcliest,pvdclinum,
+pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
+opecod,cfocod,pvdtipfrt,pvddatprev,pvdhorprev,
+pvdtipatd,pvdloccod)
+values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"""
+
+list_items_from_order = """"""
+insert_order_items = """"""
+update_order_items = """"""
 
 list_all_clients = """select clicod,clides,cliend,clicpfcgc,clibai,clitel,clitel,
 clicid,clinum,clicmp,cliest,clilimcre,clilimutl, clilimcre2,

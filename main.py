@@ -5,6 +5,7 @@ from typing import Optional
 from datetime import datetime, date, time
 from controllers.connection import conectar_db
 from functions import null_validation
+from models.order import OrderInsert
 
 import sql_variables
 import pprint
@@ -122,27 +123,6 @@ def list_client_by_id(client_id):
         client_dict[column] = client[indexcolumn]     
     return client_dict
 
-@app.get('/api/ticket/{ticket_id}/entries')
-def list_ticket_entries_test(ticket_id: int):
-    sql = """select codocor, ocordes, codatt, teccod, ocordata, ocorhora, tipoocorcod
-            from att_logger_ocorrencias where codatt = ?
-    """
-    print('pesquisando o ticket:', ticket_id)
-    cursor.execute(sql, [ticket_id])
-    rs = cursor.fetchall()
-    entries = []
-    for entry in rs:
-        entry_dict = {
-            'codocor': entry[0],
-            'ocordes': entry[1],
-            'codatt': entry[2],
-            'teccod': entry[3],
-            'ocordata': entry[4],
-            'ocorhora': entry[5],
-            'tipoocorcod': entry[6]
-        }
-        entries.append(entry_dict)
-    return entries
 
 class TicketIn(BaseModel):
     client_code: int
@@ -232,8 +212,34 @@ def open_new_ticket(ticket: TicketIn):
                                       'ACESSO REMOTO', time_ticket, ticket.client_contact])
     db_.commit()
 
-
     return {'codatt': codatt, 'status': 200}
+
+@app.post('/api/order')
+def open_new_order(order: OrderInsert):
+    client_id = str(order.clicod).zfill(15)
+    order_id = str(order.pvdnum).zfill(10)
+    funcod = str(order.funcod).zfill(6)
+    pvdtipprc = str(order.pvdtipprc)
+    pvdvlr = str(order.pvdvlr)
+    opecod = str(order.opecod)
+    cfocod = str(order.cfocod)
+    pvdtipefet = str(order.pvdtipefet)
+    pvdobs = str(order.pvdobs)
+    if order.pvddatemi is None:        
+        now = datetime.now()
+        order_date = datetime.date(now)
+        print('será utilizada a data atual:', order_date)
+    else:
+        order_date = order.open_date
+    
+    if order.pvdhoremi is None:
+        order_time = datetime.time(now)
+        order_time = str(order_time.hour)+str(order_time.minute)
+        print('hora:', order_time)
+    else:
+        order_time = order.pvdhoremi
+
+    
 
 
 

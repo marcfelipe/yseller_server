@@ -1,0 +1,6 @@
+~$listagem endpoints.xlsx
+__pycache__
+verifica_bds.py
+sql_to_json.py
+.venv
+docs\
