@@ -13,6 +13,7 @@ class OrderItemsInsert(BaseModel):
     pvitipacr: str
     pviprcprat: str
     pvitip = '1'
+    pviserpro: Optional[str]
 
 class OrderInsert(BaseModel):
     pvdnum: int

@@ -5,11 +5,10 @@ from typing import Optional
 from datetime import datetime, date, time
 from controllers.connection import conectar_db
 from functions import null_validation
-from models.order import OrderInsert
+from models.order import OrderInsert, OrderItemsInsert
 
 import sql_variables
 import pprint
-import json
 
 app = FastAPI()
 
@@ -116,7 +115,7 @@ def list_client_by_id(client_id):
     sql_client=sql_variables.list_client_by_code
     criteria = str(client_id).zfill(15)
     cursor.execute(sql_client, [criteria])
-    client = cursor.fetchone()        
+    client = cursor.fetchone()          
     columns = list(zip(*cursor.description))[0]
     client_dict = {}
     for indexcolumn, column in enumerate(columns):
@@ -221,7 +220,7 @@ def open_new_order(order: OrderInsert):
     funcod = str(order.funcod).zfill(6)
     pvdtipprc = str(order.pvdtipprc)
     pvdvlr = str(order.pvdvlr)
-    opecod = str(order.opecod)
+    opecod = str(order.opecod).zfill(4)
     cfocod = str(order.cfocod)
     pvdtipefet = str(order.pvdtipefet)
     pvdobs = str(order.pvdobs)
@@ -239,7 +238,32 @@ def open_new_order(order: OrderInsert):
     else:
         order_time = order.pvdhoremi
 
-    
+    cursor_client_order = db_.cursor()
+    #client_order = {}
+    cursor_client_order.execute(sql_variables.list_client_by_code,[client_id])
+    client_data = cursor_client_order.fetchone()
+    print('cliente encontrado')
+    print(client_data)
+    pvdclides = client_data[1]
+    pvdcliend = client_data[2]
+    pvdclibai = client_data[4]
+    pvdclicid = client_data[7]
+    pvdcliest = client_data[10]
+    pvdclinum = client_data[8]
+    pvdclicep = client_data[6]
+    pvdclicpfcgc = client_data[3]
+    pvdclitel = client_data[5]
+
+    cursor.execute(sql_variables.insert_order,[order_id, funcod, client_id, pvdtipprc,
+    order_date, order_time, order.pvddatfec, order.pvdhorfec, order.pvdstatus,
+    order.pvddocimp,pvdobs,pvdvlr,order.pvddcn,order.pvdacr,order.pvdblodcn,
+    order.pvdbloest,order.pvdblolimcrd,pvdclides,pvdcliend,
+    pvdclibai,pvdclicid,pvdcliest,pvdclinum,
+    pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
+    opecod,cfocod,order.pvdtipfrt,order.pvddatprev,order.pvdhorprev,
+    order.pvdtipatd,order.pvdloccod])
+    db_.commit()
+
 
 
 
