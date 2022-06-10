@@ -2,5 +2,6 @@
 __pycache__
 verifica_bds.py
 sql_to_json.py
-.venv/*
+k39/*
 docs/*
+venv/*

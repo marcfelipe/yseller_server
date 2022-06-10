@@ -1,3 +1,4 @@
+from itertools import product
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -229,7 +230,7 @@ def open_new_order(order: OrderInsert):
         order_date = datetime.date(now)
         print('será utilizada a data atual:', order_date)
     else:
-        order_date = order.open_date
+        order_date = order.pvddatemi
     
     if order.pvdhoremi is None:
         order_time = datetime.time(now)
@@ -254,15 +255,18 @@ def open_new_order(order: OrderInsert):
     pvdclicpfcgc = client_data[3]
     pvdclitel = client_data[5]
 
-    cursor.execute(sql_variables.insert_order,[order_id, funcod, client_id, pvdtipprc,
-    order_date, order_time, order.pvddatfec, order.pvdhorfec, order.pvdstatus,
-    order.pvddocimp,pvdobs,pvdvlr,order.pvddcn,order.pvdacr,order.pvdblodcn,
-    order.pvdbloest,order.pvdblolimcrd,pvdclides,pvdcliend,
-    pvdclibai,pvdclicid,pvdcliest,pvdclinum,
-    pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
-    opecod,cfocod,order.pvdtipfrt,order.pvddatprev,order.pvdhorprev,
-    order.pvdtipatd,order.pvdloccod])
-    db_.commit()
+    # cursor.execute(sql_variables.insert_order,[order_id, funcod, client_id, pvdtipprc,
+    # order_date, order_time, order.pvddatfec, order.pvdhorfec, order.pvdstatus,
+    # order.pvddocimp,pvdobs,pvdvlr,order.pvddcn,order.pvdacr,order.pvdblodcn,
+    # order.pvdbloest,order.pvdblolimcrd,pvdclides,pvdcliend,
+    # pvdclibai,pvdclicid,pvdcliest,pvdclinum,
+    # pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
+    # opecod,cfocod,order.pvdtipfrt,order.pvddatprev,order.pvdhorprev,
+    # order.pvdtipatd,order.pvdloccod])
+    # db_.commit()
+    product_seq = 1
+    for order_item in order.order_items:
+        print('Product seq:', product_seq,'product code:', order_item.procod, 'valor: ', order_item.pvivlruni)
 
 
 
