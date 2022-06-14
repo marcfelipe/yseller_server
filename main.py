@@ -255,18 +255,76 @@ def open_new_order(order: OrderInsert):
     pvdclicpfcgc = client_data[3]
     pvdclitel = client_data[5]
 
-    # cursor.execute(sql_variables.insert_order,[order_id, funcod, client_id, pvdtipprc,
-    # order_date, order_time, order.pvddatfec, order.pvdhorfec, order.pvdstatus,
-    # order.pvddocimp,pvdobs,pvdvlr,order.pvddcn,order.pvdacr,order.pvdblodcn,
-    # order.pvdbloest,order.pvdblolimcrd,pvdclides,pvdcliend,
-    # pvdclibai,pvdclicid,pvdcliest,pvdclinum,
-    # pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
-    # opecod,cfocod,order.pvdtipfrt,order.pvddatprev,order.pvdhorprev,
-    # order.pvdtipatd,order.pvdloccod])
-    # db_.commit()
+    cursor.execute(sql_variables.insert_order,[order_id, funcod, client_id, pvdtipprc,
+    order_date, order_time, order.pvddatfec, order.pvdhorfec, order.pvdstatus,
+    order.pvddocimp,pvdobs,pvdvlr,order.pvddcn,order.pvdacr,order.pvdblodcn,
+    order.pvdbloest,order.pvdblolimcrd,pvdclides,pvdcliend,
+    pvdclibai,pvdclicid,pvdcliest,pvdclinum,
+    pvdclicep,pvdclicpfcgc,pvdclitel,pvdtipefet,
+    opecod,cfocod,order.pvdtipfrt,order.pvddatprev,order.pvdhorprev,
+    order.pvdtipatd,order.pvdloccod])
+    db_.commit()
+    print('=====PEDIDO GRAVADO, INICIANDO INCLUSÃO DE ITENS======')
     product_seq = 1
     for order_item in order.order_items:
         print('Product seq:', product_seq,'product code:', order_item.procod, 'valor: ', order_item.pvivlruni)
+        #TODO implement search for tax data and item data
+        procod = str(order_item.procod).zfill(14)
+        cursor.execute(sql_variables.list_product_data_for_insert,[procod, procod])        
+        product_db_data = cursor.fetchone()
+        print('Produto encontrado:\n', product_db_data)
+        pviprodes = product_db_data[1]
+        pviprodesdz = product_db_data[2]
+        pvitrbid = product_db_data[3]
+        pvialqicms = product_db_data[4]
+        pviiteemb = product_db_data[5]
+        pviunid = product_db_data[6]
+        pviprocodaux = product_db_data[7]
+        pviprodesvar = product_db_data[8]
+        pvidesvlr = 0.00
+        pviqtd = order_item.pviqtd
+        pvivlruni = order_item.pvivlruni
+        pvivlrdcn = order_item.pvivlrdcn
+        pvitipdcn = order_item.pvitipdcn
+        pvivlracr = order_item.pvivlracr
+        pvitipacr = order_item.pvitipacr        
+        pviserpro = order_item.pviserpro        
+        pviobs = order_item.pviobs
+        pvifuncod = order_item.pvifuncod
+        pvitip = order_item.pvitip
+        pviprcprat = order_item.pviprcprat
+        print('Descrição:', pviprodes, '|Descrição reduzida', pviprodesdz)
+        cursor.execute(sql_variables.list_product_pis,[procod])
+        product_pis = cursor.fetchone()
+        if product_pis is not None:
+            pvialqpis = product_pis[0]
+            pvicstpis = product_pis[1]
+        else:
+            pvialqpis = None
+            pvicstpis = None
+        cursor.execute(sql_variables.list_product_cofins,[procod])
+        product_cofins = cursor.fetchone()    
+        if product_cofins is not None:      
+            pvialqcof = product_cofins[0]
+            pvicstcof = product_cofins[1]
+        else:
+            pvialqcof = None
+            pvicstcof = None
+        print('Impostos federais alq pis: {}, cst pis: {}, alq cofins: {}, cst cofins: {}'.format(pvialqpis,pvicstpis,
+                                                                                                  pvialqcof,pvicstcof))
+        cursor.execute(sql_variables.
+                       insert_order_items,[product_seq, order_id, procod,
+                                            pviqtd, pvivlruni,pvivlrdcn,pvitipdcn,
+                                            pvivlracr,pvitipacr,pviserpro,pviobs,
+                                            pvitrbid, pvialqicms, pviiteemb,
+                                            pviunid, pviprodes, pviprodesdz,
+                                            pviprocodaux, pvifuncod, pviprcprat,
+                                            pvitip, pviprodesvar, pvidesvlr, pvialqpis,
+                                            pvicstpis, pvialqcof, pvicstcof])
+        db_.commit()
+        product_seq += 1
+    print('PEDIDO INCLUSO COM SUCESSO!')
+    
 
 
 

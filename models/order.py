@@ -11,8 +11,10 @@ class OrderItemsInsert(BaseModel):
     pvitipdcn: str
     pvivlracr: float
     pvitipacr: str
-    pviprcprat: str
+    pviprcprat = '1'
     pvitip = '1'
+    pvifuncod: str
+    pviobs: str    
     pviserpro: Optional[str]
 
 class OrderInsert(BaseModel):

@@ -92,7 +92,7 @@ clitel2,clifax,clicon,clidcn,cliobs,cliemail,clisex,
 clipais,clicodigoibge,cliindcinscest,clisincld
 from cliente where clicod = ? """
 
-list_product_data_for_insert="""select t.*,p.procod,prodes,prodesrdz,p.trbid,t.trbalq pvialqicms,proiteemb,prounid,
+list_product_data_for_insert="""select p.procod,prodes,prodesrdz,p.trbid,t.trbalq pvialqicms,proiteemb,prounid,
 procodaux, prodesvar from produto p
 left join tributacao t on p.trbid=t.trbid
 left join produtoaux px on p.procod=px.procod
@@ -105,4 +105,4 @@ list_product_cofins = """select impfedalqsai,impfedstsai from impostos_federais_
 left join impostos_federais imp on ifp.impfedsim=imp.impfedsim
 where impfedtip='C' and procod = ?"""
 
-list_product_data=""""""
+#list_product_data=""""""
